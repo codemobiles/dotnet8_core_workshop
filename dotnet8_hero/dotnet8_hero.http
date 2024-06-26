@@ -1,0 +1,6 @@
+@dotnet8_hero_HostAddress = http://localhost:5247
+
+GET {{dotnet8_hero_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
