@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using dotnet8_hero.Data;
+using dotnet8_hero.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
 //using dotnet8_hero.Models;
 
@@ -28,8 +29,20 @@ namespace dotnet8_hero.Controllers
         [HttpGet("{id}")]
         public IActionResult GetProductById(int id)
         {
-            var product = this.DatabaseContext.Products.Find(id);
-            return Ok(product);
+            // var product = this.DatabaseContext.Products.Find(id);
+            // return Ok(product);
+
+            // var selectedProduct = this.DatabaseContext.Products.Find(id);
+            // if (selectedProduct != null)
+            // {
+            //     var product = ProductResponse.FromProduct(selectedProduct);
+            //     return Ok(product);
+            // }
+            // return NotFound();
+
+            var selectedProduct = this.DatabaseContext.Products.Select(ProductResponse.FromProduct).Where(p => p.ProductId == id).FirstOrDefault();
+            return Ok(selectedProduct);
+
         }
 
 
