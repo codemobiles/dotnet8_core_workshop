@@ -5,6 +5,7 @@ code --install-extension eamodio.gitlens
 code --install-extension esbenp.prettier-vscode
 code --install-extension bierner.color-info
 code --install-extension ms-mssql.mssql
+code --install-extension matijarmk.dotnet-core-commands
 
 # uninstall extensions
 code --uninstall-extension esbenp.prettier-vscode
