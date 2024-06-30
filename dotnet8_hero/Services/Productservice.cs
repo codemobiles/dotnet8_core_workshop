@@ -17,10 +17,10 @@ namespace dotnet8_hero.Services
 
         public async Task<IEnumerable<Product>> FindAll()
         {
-            return this.DatabaseContext.Products.Include(p => p.Category).ToListAsync();
+            return await this.DatabaseContext.Products.Include(p => p.Category).ToListAsync();
         }
 
-        public Task<Product> FindById(int id)
+        public Task<Product?> FindById(int id)
         {
             return this.DatabaseContext.Products.Include(p => p.Category).Where(p => p.ProductId == id).FirstOrDefaultAsync();
         }
@@ -38,9 +38,9 @@ namespace dotnet8_hero.Services
 
 
 
-        public Task<IEnumerable<Product>> Search(string name)
+        public async Task<IEnumerable<Product>> Search(string name)
         {
-            return await databaseContext.Products.Include(p => p.Category)
+            return await DatabaseContext.Products.Include(p => p.Category)
             .Where(p => p.Name.ToLower().Contains(name)).ToListAsync();
         }
 

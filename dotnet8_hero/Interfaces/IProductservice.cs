@@ -5,7 +5,7 @@ namespace dotnet8_hero.Interfaces
     public interface IProductService
     {
         Task<IEnumerable<Product>> FindAll();
-        Task<Product> FindById(int id);
+        Task<Product?> FindById(int id);
         Task Create(Product product);
         Task Update(Product product);
         Task Delete(Product product);
