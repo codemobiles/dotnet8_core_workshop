@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace dotnet8_hero.Controllers
 {
     [Route("[controller]")]
-    // [ApiController]
+    [ApiController]
     public class ProductsController : ControllerBase
     {
         public DatabaseContext DatabaseContext { get; set; }
@@ -58,7 +58,7 @@ namespace dotnet8_hero.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct([FromForm] Product productRequest)
+        public IActionResult AddProduct([FromForm] ProductRequest productRequest)
         {
 
             var product = new Product()
@@ -71,7 +71,7 @@ namespace dotnet8_hero.Controllers
             product.Image = "";
 
             this.DatabaseContext.Products.Add(product);
-            this.DatabaseContext.SaveChanges();            
+            this.DatabaseContext.SaveChanges();
             return StatusCode((int)HttpStatusCode.Created, product);
         }
 
