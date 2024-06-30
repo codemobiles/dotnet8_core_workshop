@@ -4,6 +4,8 @@ namespace dotnet8_hero.DTOs.Product
 {
     public class ProductRequest
     {
+        public int? ProductId { get; set; }
+
         [Required]
         [MaxLength(100, ErrorMessage = "Name, maximum length 100")]
         public string Name { get; set; } = null!;

@@ -53,44 +53,67 @@ namespace dotnet8_hero.Controllers
             return result;
         }
 
+
         [HttpPost]
-        public IActionResult AddProduct([FromForm] ProductRequest productRequest)
+        public async Task<ActionResult<Product>> AddProductAsync([FromForm] ProductRequest productRequest)
         {
+
+            // (string errorMessage, string imageName) = await ProductService.UploadImage(productRequest.FormFiles);
+            // if (!String.IsNullOrEmpty(errorMessage))
+            // {
+            //     return BadRequest();
+            // }
+
             var product = productRequest.Adapt<Product>();
-            this.DatabaseContext.Products.Add(product);
-            this.DatabaseContext.SaveChanges();
+            product.Image = "";
+            await ProductService.Create(product);
             return StatusCode((int)HttpStatusCode.Created, product);
         }
-
-        // [HttpDelete("{id}")]
-        // public IActionResult DeletProduct(int id)
-        // {
-        //     var product = this.DatabaseContext.Products.Find(id);
-        //     if (product == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     this.DatabaseContext.Products.Remove(product);
-        //     this.DatabaseContext.SaveChanges();
-        //     return NoContent();
-        // }
 
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletProductAsync(int id)
+        public async Task<ActionResult> DeletProductAsync(int id)
         {
-            var product = await this.DatabaseContext.Products.FindAsync(id);
+            var product = await ProductService.FindById(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            this.DatabaseContext.Products.Remove(product);
-            await this.DatabaseContext.SaveChangesAsync();
+            await ProductService.Delete(product);
             return NoContent();
         }
 
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateProductAsync(int id, [FromForm] ProductRequest productRequest)
+        {
+            if (id != productRequest.ProductId)
+            {
+                return BadRequest();
+            }
+
+            var product = await ProductService.FindById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // (string errorMessage, string imageName) = await productService.UploadImage(productRequest.FormFiles);
+            // if (!String.IsNullOrEmpty(errorMessage))
+            // {
+            //     return BadRequest();
+            // }
+            // if (!String.IsNullOrEmpty(imageName))
+            // {
+            //     product.Image = imageName;
+            // }
+
+            productRequest.Adapt(product);
+            await ProductService.Update(product);
+            return Ok(ProductResponse.FromProduct(product));
+
+        }
     }
 }
