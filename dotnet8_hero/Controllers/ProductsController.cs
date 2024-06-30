@@ -9,6 +9,7 @@ using dotnet8_hero.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
+using dotnet8_hero.Interfaces;
 //using dotnet8_hero.Models;
 
 namespace dotnet8_hero.Controllers
@@ -18,16 +19,20 @@ namespace dotnet8_hero.Controllers
     public class ProductsController : ControllerBase
     {
         public DatabaseContext DatabaseContext { get; set; }
-        public ProductsController(DatabaseContext databaseContext)
+        public IProductService ProductService { get; }
+        public ProductsController(DatabaseContext databaseContext, IProductService productService)
         {
+            this.ProductService = productService;
             this.DatabaseContext = databaseContext;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ProductResponse>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductResponse>>> GetProducts()
         {
-            var products = this.DatabaseContext.Products.Include(p => p.Category).Select(ProductResponse.FromProduct).ToList();
-            return products;
+            // var products = this.DatabaseContext.Products.Include(p => p.Category).Select(ProductResponse.FromProduct).ToList();
+            // return products;
+
+            return (await this.ProductService.FindAll()).Select(ProductResponse.FromProduct).ToList();
         }
 
         [HttpGet("{id}")]
