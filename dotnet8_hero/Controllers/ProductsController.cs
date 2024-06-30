@@ -29,37 +29,27 @@ namespace dotnet8_hero.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductResponse>>> GetProducts()
         {
-            // var products = this.DatabaseContext.Products.Include(p => p.Category).Select(ProductResponse.FromProduct).ToList();
-            // return products;
-
             return (await this.ProductService.FindAll()).Select(ProductResponse.FromProduct).ToList();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProductById(int id)
+        public async Task<ActionResult<ProductResponse>> GetProductByIdAsync(int id)
         {
-            // var product = this.DatabaseContext.Products.Find(id);
-            // return Ok(product);
+            var product = await this.ProductService.FindById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-            // var selectedProduct = this.DatabaseContext.Products.Find(id);
-            // if (selectedProduct != null)
-            // {
-            //     var product = ProductResponse.FromProduct(selectedProduct);
-            //     return Ok(product);
-            // }
-            // return NotFound();
-
-            var selectedProduct = this.DatabaseContext.Products.Include(p => p.Category).Select(ProductResponse.FromProduct).Where(p => p.ProductId == id).FirstOrDefault();
-            return Ok(selectedProduct);
+            return ProductResponse.FromProduct(product);
 
         }
 
 
         [HttpGet("search")]
-        public ActionResult<IEnumerable<ProductResponse>> Search([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<ProductResponse>>> Search([FromQuery] string name)
         {
-            // search
-            var result = this.DatabaseContext.Products.Include(p => p.Category).Where(p => p.Name.ToLower().Contains(name.ToLower())).Select(ProductResponse.FromProduct).ToList();
+            var result = (await this.ProductService.Search(name)).Select(ProductResponse.FromProduct).ToList();
             return result;
         }
 
