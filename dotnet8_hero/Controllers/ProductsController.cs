@@ -8,6 +8,7 @@ using dotnet8_hero.DTOs.Product;
 using dotnet8_hero.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Mapster;
 //using dotnet8_hero.Models;
 
 namespace dotnet8_hero.Controllers
@@ -60,16 +61,7 @@ namespace dotnet8_hero.Controllers
         [HttpPost]
         public IActionResult AddProduct([FromForm] ProductRequest productRequest)
         {
-
-            var product = new Product()
-            {
-                Name = productRequest.Name,
-                Stock = productRequest.Stock,
-                Price = productRequest.Price,
-                CategoryId = productRequest.CategoryId
-            };
-            product.Image = "";
-
+            var product = productRequest.Adapt<Product>();
             this.DatabaseContext.Products.Add(product);
             this.DatabaseContext.SaveChanges();
             return StatusCode((int)HttpStatusCode.Created, product);
