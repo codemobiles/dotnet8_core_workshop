@@ -50,6 +50,7 @@ namespace dotnet8_hero.Controllers
         [HttpGet("search")]
         public ActionResult<IEnumerable<ProductResponse>> Search([FromQuery] string name)
         {
+            // search
             var result = this.DatabaseContext.Products.Include(p => p.Category).Where(p => p.Name.ToLower().Contains(name.ToLower())).Select(ProductResponse.FromProduct).ToList();
             return result;
         }
