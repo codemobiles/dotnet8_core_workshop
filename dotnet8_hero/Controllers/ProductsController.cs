@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using dotnet8_hero.Data;
 using dotnet8_hero.DTOs.Product;
+using dotnet8_hero.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 //using dotnet8_hero.Models;
@@ -11,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace dotnet8_hero.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    // [ApiController]
     public class ProductsController : ControllerBase
     {
         public DatabaseContext DatabaseContext { get; set; }
@@ -54,6 +56,25 @@ namespace dotnet8_hero.Controllers
             var result = this.DatabaseContext.Products.Include(p => p.Category).Where(p => p.Name.ToLower().Contains(name.ToLower())).Select(ProductResponse.FromProduct).ToList();
             return result;
         }
+
+        [HttpPost]
+        public IActionResult AddProduct([FromForm] Product productRequest)
+        {
+
+            var product = new Product()
+            {
+                Name = productRequest.Name,
+                Stock = productRequest.Stock,
+                Price = productRequest.Price,
+                CategoryId = productRequest.CategoryId
+            };
+            product.Image = "";
+
+            this.DatabaseContext.Products.Add(product);
+            this.DatabaseContext.SaveChanges();            
+            return StatusCode((int)HttpStatusCode.Created, product);
+        }
+
 
     }
 }
