@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using dotnet8_hero.Data;
 using dotnet8_hero.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 //using dotnet8_hero.Models;
 
 namespace dotnet8_hero.Controllers
@@ -20,10 +21,10 @@ namespace dotnet8_hero.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProducts()
+        public ActionResult<IEnumerable<ProductResponse>> GetProducts()
         {
-            var products = this.DatabaseContext.Products.ToList();
-            return Ok(products);
+            var products = this.DatabaseContext.Products.Include(p => p.Category).Select(ProductResponse.FromProduct).ToList();
+            return products;
         }
 
         [HttpGet("{id}")]
@@ -40,7 +41,7 @@ namespace dotnet8_hero.Controllers
             // }
             // return NotFound();
 
-            var selectedProduct = this.DatabaseContext.Products.Select(ProductResponse.FromProduct).Where(p => p.ProductId == id).FirstOrDefault();
+            var selectedProduct = this.DatabaseContext.Products.Include(p => p.Category).Select(ProductResponse.FromProduct).Where(p => p.ProductId == id).FirstOrDefault();
             return Ok(selectedProduct);
 
         }

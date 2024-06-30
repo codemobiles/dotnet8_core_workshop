@@ -7,6 +7,7 @@ namespace dotnet8_hero.DTOs.Product
         public string? Image { get; set; }
         public int Stock { get; set; }
         public decimal Price { get; set; }
+        public string CategoryName { get; set; } = "";
 
         public static ProductResponse FromProduct(dotnet8_hero.Entities.Product product)
         {
@@ -17,6 +18,7 @@ namespace dotnet8_hero.DTOs.Product
                 Image = product.Image,
                 Stock = product.Stock,
                 Price = product.Price,
+                CategoryName = product.Category.Name
             };
 
         }
