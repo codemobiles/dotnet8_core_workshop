@@ -1,4 +1,7 @@
 
+using System.Reflection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using dotnet8_hero.Data;
 using dotnet8_hero.Interfaces;
 using dotnet8_hero.Services;
@@ -12,9 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 // using Microsoft.EntityFrameworkCore;
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionSQLServer")));
 
-// Add Product service
-builder.Services.AddTransient<IProductService, Productservice>();
-builder.Services.AddTransient<IUploadFileService, UploadFileService>();
+// 1# Add services manually
+// builder.Services.AddTransient<IProductService, Productservice>();
+// builder.Services.AddTransient<IUploadFileService, UploadFileService>();
+
+// 2# Begin of using Auto Add Services
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
+    .Where(t => t.Name.EndsWith("Service"))
+    .AsImplementedInterfaces();
+});
+// End of using Auto Add Services
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

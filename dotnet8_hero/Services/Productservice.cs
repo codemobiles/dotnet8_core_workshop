@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dotnet8_hero.Services
 {
-    public class Productservice : IProductService
+    public class ProductService : IProductService
     {
         public DatabaseContext DatabaseContext { get; }
-        public IUploadFileService UploadFileService { get;set; }
+        public IUploadFileService UploadFileService { get; set; }
 
-        public Productservice(DatabaseContext databaseContext, IUploadFileService uploadFileService)
+        public ProductService(DatabaseContext databaseContext, IUploadFileService uploadFileService)
         {
             this.UploadFileService = uploadFileService;
             this.DatabaseContext = databaseContext;
