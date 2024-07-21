@@ -58,15 +58,20 @@ namespace dotnet8_hero.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> AddProductAsync([FromForm] ProductRequest productRequest)
         {
-
-            // (string errorMessage, string imageName) = await ProductService.UploadImage(productRequest.FormFiles);
-            // if (!String.IsNullOrEmpty(errorMessage))
-            // {
-            //     return BadRequest();
-            // }
+            string finalImageName = "";
+            if (productRequest.FormFiles != null)
+            {
+                (string errorMessage, string imageName) = await ProductService.UploadImage(productRequest.FormFiles);
+                if (!String.IsNullOrEmpty(errorMessage))
+                {
+                    return BadRequest();
+                }
+                finalImageName = imageName;    
+            }
+            
 
             var product = productRequest.Adapt<Product>();
-            product.Image = "";
+            product.Image = finalImageName;
             await ProductService.Create(product);
             return StatusCode((int)HttpStatusCode.Created, product);
         }

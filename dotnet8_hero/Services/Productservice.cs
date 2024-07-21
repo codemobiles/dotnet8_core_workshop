@@ -8,9 +8,11 @@ namespace dotnet8_hero.Services
     public class Productservice : IProductService
     {
         public DatabaseContext DatabaseContext { get; }
+        public IUploadFileService UploadFileService { get;set; }
 
-        public Productservice(DatabaseContext databaseContext)
+        public Productservice(DatabaseContext databaseContext, IUploadFileService uploadFileService)
         {
+            this.UploadFileService = uploadFileService;
             this.DatabaseContext = databaseContext;
 
         }
@@ -48,7 +50,19 @@ namespace dotnet8_hero.Services
             await DatabaseContext.SaveChangesAsync();
         }
 
-
-
+        public async Task<(string errorMessage, string imageName)> UploadImage(List<IFormFile> formFiles)
+        {
+            string errorMesage = String.Empty;
+            string imageName = String.Empty;
+            if (UploadFileService.IsUpload(formFiles))
+            {
+                errorMesage = UploadFileService.Validation(formFiles);
+                if (String.IsNullOrEmpty(errorMesage))
+                {
+                    imageName = (await UploadFileService.UploadImages(formFiles))[0];
+                }
+            }
+            return (errorMesage, imageName);
+        }
     }
 }
