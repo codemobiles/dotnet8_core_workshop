@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using dotnet8_hero.Data;
+using dotnet8_hero.Installers;
 using dotnet8_hero.Interfaces;
 using dotnet8_hero.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // dotnet add package Microsoft.EntityFrameworkCore.InMemory
 // using Microsoft.EntityFrameworkCore;
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionSQLServer")));
+// builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionSQLServer")));
+
+// Add services to the container.
+builder.Services.InstallServiceInAssembly(builder.Configuration);
 
 // 1# Add services manually
 // builder.Services.AddTransient<IProductService, Productservice>();
