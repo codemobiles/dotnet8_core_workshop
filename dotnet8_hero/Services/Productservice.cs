@@ -1,5 +1,6 @@
 using dotnet8_hero.Data;
 using dotnet8_hero.Entities;
+using dotnet8_hero.Installers;
 using dotnet8_hero.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,8 @@ namespace dotnet8_hero.Services
 
         public async Task Create(Product product)
         {
+            product.Name.IsValidProductName();
+
             DatabaseContext.Products.Add(product);
             await DatabaseContext.SaveChangesAsync();
         }
