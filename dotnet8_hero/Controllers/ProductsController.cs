@@ -17,17 +17,15 @@ namespace dotnet8_hero.Controllers
     [Route("[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
-    {
-        public DatabaseContext DatabaseContext { get; set; }
+    {        
         public IProductService ProductService { get; }
-        public ProductsController(DatabaseContext databaseContext, IProductService productService)
+        public ProductsController(IProductService productService)
         {
-            this.ProductService = productService;
-            this.DatabaseContext = databaseContext;
+            this.ProductService = productService;     
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductResponse>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductResponse>>> GetProductsAsync()
         {
             return (await this.ProductService.FindAll()).Select(ProductResponse.FromProduct).ToList();
         }
@@ -49,7 +47,10 @@ namespace dotnet8_hero.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<ProductResponse>>> Search([FromQuery] string name)
         {
-            var result = (await this.ProductService.Search(name)).Select(ProductResponse.FromProduct).ToList();
+            var result = (await this.ProductService.Search(name))
+            .Select(ProductResponse.FromProduct)
+            .ToList();
+
             return result;
         }
 
@@ -69,22 +70,6 @@ namespace dotnet8_hero.Controllers
             await ProductService.Create(product);
             return StatusCode((int)HttpStatusCode.Created, product);
         }
-
-
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeletProductAsync(int id)
-        {
-            var product = await ProductService.FindById(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            await ProductService.Delete(product);
-            return NoContent();
-        }
-
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateProductAsync(int id, [FromForm] ProductRequest productRequest)
@@ -114,6 +99,20 @@ namespace dotnet8_hero.Controllers
             await ProductService.Update(product);
             return Ok(ProductResponse.FromProduct(product));
 
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeletProductAsync(int id)
+        {
+            var product = await ProductService.FindById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            await ProductService.Delete(product);
+            return NoContent();
         }
     }
 }
