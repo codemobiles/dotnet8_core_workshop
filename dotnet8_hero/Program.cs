@@ -14,6 +14,7 @@ builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(b
 
 // Add Product service
 builder.Services.AddTransient<IProductService, Productservice>();
+builder.Services.AddTransient<IUploadFileService, UploadFileService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
