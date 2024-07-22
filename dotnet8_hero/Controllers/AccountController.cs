@@ -25,9 +25,30 @@ namespace dotnet8_hero.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult> Register(RegisterRequest request)
         {
-            var account = request.Adapt<Account>();
-            await AccountService.Register(account);
-            return StatusCode((int)HttpStatusCode.Created);
+            try
+            {
+                var account = request.Adapt<Account>();
+                await AccountService.Register(account);
+                return StatusCode((int)HttpStatusCode.Created);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult> Login(LoginRequest loginRequest)
+        {
+            var account = await AccountService.Login(loginRequest.Username, loginRequest.Password);
+            if (account == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(new { token = AccountService.GenerateToken(account) });
+
+        }
+
     }
 }
