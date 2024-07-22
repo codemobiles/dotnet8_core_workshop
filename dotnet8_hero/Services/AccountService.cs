@@ -28,7 +28,7 @@ namespace dotnet8_hero.Interfaces
                 throw new Exception("Existing Account");
             }
 
-            // account.Password = CreatePasswordHash(account.Password);            
+            account.Password = CreatePasswordHash(account.Password);
             databaseContext.Accounts.Add(account);
             await databaseContext.SaveChangesAsync();
         }
@@ -40,8 +40,7 @@ namespace dotnet8_hero.Interfaces
             var account = await databaseContext.Accounts.Include(a => a.Role)
             .SingleOrDefaultAsync(a => a.Username == username);
 
-            // if (account != null && VerifyPassword(account.Password, password))
-            if (account != null && account.Password == password)
+            if (account != null && VerifyPassword(account.Password, password))
             {
                 return account;
             }
