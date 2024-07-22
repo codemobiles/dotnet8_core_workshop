@@ -10,18 +10,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
 using dotnet8_hero.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 //using dotnet8_hero.Models;
 
 namespace dotnet8_hero.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     [ApiController]
     public class ProductsController : ControllerBase
-    {        
+    {
         public IProductService ProductService { get; }
         public ProductsController(IProductService productService)
         {
-            this.ProductService = productService;     
+            this.ProductService = productService;
         }
 
         [HttpGet]
@@ -45,6 +47,7 @@ namespace dotnet8_hero.Controllers
 
 
         [HttpGet("search")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductResponse>>> Search([FromQuery] string name)
         {
             var result = (await this.ProductService.Search(name))
@@ -66,9 +69,9 @@ namespace dotnet8_hero.Controllers
                 {
                     return BadRequest();
                 }
-                finalImageName = imageName;    
+                finalImageName = imageName;
             }
-            
+
 
             var product = productRequest.Adapt<Product>();
             product.Image = finalImageName;
