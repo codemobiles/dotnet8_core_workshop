@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace dotnet8_hero.Controllers
 {
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin, Cashier")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
