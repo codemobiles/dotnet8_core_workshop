@@ -21,8 +21,10 @@ namespace dotnet8_hero.Controllers
     public class ProductsController : ControllerBase
     {
         public IProductService ProductService { get; }
-        public ProductsController(IProductService productService)
+        public ILogger<ProductsController> Logger { get;set; }
+        public ProductsController(IProductService productService, ILogger<ProductsController> logger)
         {
+            this.Logger = logger;
             this.ProductService = productService;
         }
 
@@ -35,6 +37,8 @@ namespace dotnet8_hero.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResponse>> GetProductByIdAsync(int id)
         {
+            Logger.LogInformation("Calling GetProductByIdAsync");
+            Logger.LogDebug("Debugging GetProductByIdAsync");
             var product = await this.ProductService.FindById(id);
             if (product == null)
             {
