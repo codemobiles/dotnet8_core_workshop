@@ -9,6 +9,8 @@ services:
     image: dotnetapi
     ports:
       - 8085:8081
+    volumes:
+      - /Users/chaiyasittayabovorn/Desktop/Training/DotNet/dotnet8_core_workshop/wwwroot:/app/wwwroot
     build:
       context: .
       dockerfile: ./Dockerfile 
