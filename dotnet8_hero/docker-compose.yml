@@ -1,0 +1,14 @@
+# docker compose up --scale dotnetapi=2 -d --build
+# migrate data in database.sql first
+# http://localhost:8081/swagger/index.html
+# 
+version: '3.4'
+
+services:    
+  dotnetapi:
+    image: dotnetapi
+    ports:
+      - 8085:8081
+    build:
+      context: .
+      dockerfile: ./Dockerfile 
